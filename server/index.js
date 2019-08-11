@@ -34,13 +34,16 @@ app.post("/api/login", loginController.loginUser);
 //logout
 app.get("/api/logout", logoutController.logoutUser);
 //projects
+app.get("/api/projects/list/:user_id", projectsController.getProjects);
+
+app.get("/api/projects/:id", projectsController.getProject );
+
+app.get("/api/projects/projectpage/:id", projectsController.getProjectPage )
+
 app.post("/api/projects/create", projectsController.createProject);
 
 app.post("/api/projects/assign", projectsController.addUser);
 
-app.get("/api/projects/list/:user_id", projectsController.getProjects);
-
-app.get("/api/projects/:id", projectsController.getProject ); 
 
 app.put("/api/projects/edit/:id", projectsController.updateProject);
 
@@ -52,8 +55,12 @@ app.put("/api/goals/edit/:id", goalsController.updateGoal);
 
 app.delete("/api/goals/delete/:id", goalsController.deleteGoal);
 //tasks
+app.get("/api/tasks/:goalId", tasksController.getTasks)
+
 app.post("/api/tasks/create", tasksController.createTask);
 //notes
+app.get("/api/notes/:goalId", notesController.getNotes)
+
 app.post("/api/notes/create", notesController.createNote);
 
 app.put("/api/notes/edit/:id", notesController.updateNote);

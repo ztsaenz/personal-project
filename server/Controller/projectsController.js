@@ -65,11 +65,8 @@ try {
 
 
     const goals = await db.find_goals({projectId: req.params.projectId})
-    console.log(goals)
     const goalIds = `{${ goals.map(g => g.id).toString() }}`;
-    console.log(goalIds)
     const projects = await db.delete_project({ goalIds, projectId:req.params.projectId })
-    console.log(projects)
     res.send('successfully deleted')
 
 
@@ -77,10 +74,35 @@ try {
     console.error(error)
 }}
 
+async function getProjectPage (req,res) {
+  try {
+    const db = req.app.get("db");
+    const foundProject = await db.get_project([req.params.id])
+    const foundGoals = await db.find_goals({projectId: req.params.id})
+    const goalIds = `{${ foundGoals.map(g => g.id).toString() }}`;
+
+    const foundNotes = await db.query(`
+      SELECT * FROM notes
+      WHERE goal_id = ANY(\${goalIds});
+    `, { goalIds })
+
+    const foundTasks = await db.query(`
+    SELECT * FROM tasks
+    WHERE goal_id = ANY(\${goalIds});
+  `, { goalIds })
+
+
+    res.send({foundProject, foundGoals, foundNotes, foundTasks }, 201)
+  } catch (error) {
+    console.error(error)
+    res.send(error, 500)
+  }
+}
+
 module.exports = {
   createProject,
   addUser,
   getProjects,
   updateProject,
-  deleteProject, getProject
+  deleteProject, getProject, getProjectPage
 };

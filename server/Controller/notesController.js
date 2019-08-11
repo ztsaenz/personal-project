@@ -1,8 +1,19 @@
 async function createNote (req,res) {
     try {
         const db = req.app.get('db');
-        const newNote = await db.notes.insert({body: req.body.body, goal_id: req.body.goal_id});
-        res.send(newNote)
+        const newNote = await db.notes.insert({body: req.body.body, goal_id: req.body.goal_id})
+        const notes = await db.get_notes([req.body.goal_id]);
+        res.send(notes)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function getNotes (req,res) {
+    try {
+        const db = req.app.get('db');
+        const foundNotes = await db.get_notes([req.params.goalId])
+        res.send(foundNotes)
     } catch (error) {
         console.error(error)
     }
@@ -33,5 +44,6 @@ module.exports = {
     createNote,
     updateNote,
     deleteNote,
+    getNotes,
 
 }
