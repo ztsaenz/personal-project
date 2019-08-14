@@ -21,7 +21,18 @@ async function getTasks (req,res){
     }
 }
 
+async function deleteTask (req,res){
+    try {
+        const db = req.app.get('db');
+        const deletedTask = await db.delete_task([req.params.taskId])
+        res.send('successfully deleted', 200)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 module.exports = {
 createTask,
 getTasks,
+deleteTask,
 }

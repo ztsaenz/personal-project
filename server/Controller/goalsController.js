@@ -29,8 +29,19 @@ async function deleteGoal (req,res) {
     }
 } 
 
+async function getGoals (req,res) {
+    try {
+        const db = req.app.get('db');
+        const foundGoals = await db.find_goals({projectId: req.params.projectId})
+        res.send(foundGoals, 200)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 module.exports = {
     createGoal,
     updateGoal,
     deleteGoal,
+    getGoals,
 }

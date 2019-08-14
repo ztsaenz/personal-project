@@ -54,10 +54,14 @@ app.post("/api/goals/create", goalsController.createGoal);
 app.put("/api/goals/edit/:id", goalsController.updateGoal);
 
 app.delete("/api/goals/delete/:id", goalsController.deleteGoal);
+
+app.get("/api/goals/:projectId", goalsController.getGoals)
 //tasks
 app.get("/api/tasks/:goalId", tasksController.getTasks)
 
 app.post("/api/tasks/create", tasksController.createTask);
+
+app.delete("/api/tasks/delete/:taskId", tasksController.deleteTask)
 //notes
 app.get("/api/notes/:goalId", notesController.getNotes)
 
