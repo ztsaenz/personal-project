@@ -29,7 +29,18 @@ async function getUser(req, res) {
   }
 }
 
+async function getUsers(req,res) {
+  try {
+    const db = req.app.get('db');
+    const users = await db.get_users();
+    res.send(users, 200)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 module.exports = {
   getUser,
-  loginUser
+  getUsers,
+  loginUser,
 };

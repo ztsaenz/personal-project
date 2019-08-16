@@ -91,12 +91,25 @@ async function getProjectPage (req,res) {
     WHERE goal_id = ANY(\${goalIds});
   `, { goalIds })
 
+    const foundUsers = await db.get_users();
 
-    res.send({foundProject, foundGoals, foundNotes, foundTasks }, 201)
+  const assignedUsers = await db.get_assigned_users([req.params.id])
+
+
+
+
+    res.send({foundProject, foundGoals, foundNotes, foundTasks, foundUsers, assignedUsers }, 201)
   } catch (error) {
     console.error(error)
     res.send(error, 500)
   }
+}
+
+async function getAssignedUser(req,res){
+  const db = req.app.get('db');
+  const assignedUsers = await db.get_assigned_users([req.params.projectId])
+  console.log(assignedUsers)
+  res.send(assignedUsers, 200)
 }
 
 module.exports = {
@@ -104,5 +117,5 @@ module.exports = {
   addUser,
   getProjects,
   updateProject,
-  deleteProject, getProject, getProjectPage
+  deleteProject, getProject, getProjectPage, getAssignedUser
 };

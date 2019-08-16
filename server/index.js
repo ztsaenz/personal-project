@@ -40,10 +40,13 @@ app.get("/api/projects/:id", projectsController.getProject );
 
 app.get("/api/projects/projectpage/:id", projectsController.getProjectPage )
 
+app.get("/api/projects/assigned/:projectId", projectsController.getAssignedUser)
+
 app.post("/api/projects/create", projectsController.createProject);
 
 app.post("/api/projects/assign", projectsController.addUser);
 
+app.post("/api/projects/adduser", projectsController.addUser)
 
 app.put("/api/projects/edit/:id", projectsController.updateProject);
 
@@ -72,6 +75,8 @@ app.put("/api/notes/edit/:id", notesController.updateNote);
 app.delete("/api/notes/delete/:id", notesController.deleteNote);
 //users
 app.get("/api/user", loginController.getUser);
+
+app.get("/api/users", loginController.getUsers)
 
 app.listen(8080, () => {
   console.log(`listening on port:8080`);
