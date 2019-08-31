@@ -1,7 +1,7 @@
 async function createProject(req, res) {
   try {
     const db = req.app.get("db");
-    const newProject = await db.projects.insert({ title: req.body.title });
+    const newProject = await db.projects.insert({ title: req.body.title, creator: req.body.user_id   });
     const projectUser = await db.projects_users.insert({
       project_id: newProject.id,
       user_id: req.body.user_id
@@ -50,11 +50,10 @@ async function getProject(req,res) {
 
 async function updateProject(req, res) {
   const db = req.app.get("db");
-  db.edit_project([req.params.id, req.body.title])
-    .then(result => {
-      res.send(result)
-    })
-    .catch(error => res.send(error));
+ const updatedProject= await db.edit_project([req.params.id, req.body.title])
+ const projectList = await db.project_list({userId: req.body.user_id});
+ res.send(projectList);
+   
 }
 
 async function deleteProject(req,res){

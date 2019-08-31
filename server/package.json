@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "body-parser": "^1.19.0",
     "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "express-session": "^1.16.2",
     "express": "^4.17.1",
-    "massive": "^5.11.2"
+    "express-session": "^1.16.2",
+    "massive": "^5.11.2",
+    "react-chat-window": "^1.2.1",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {},
   "scripts": {
