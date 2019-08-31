@@ -16,6 +16,9 @@ class App extends React.Component {
 
   render(){
     return (
+          <div className='app'>
+
+          
       <Router>
         <Switch>
           <Route path = '/signup' component = {Signup} />
@@ -26,6 +29,7 @@ class App extends React.Component {
           <Route path ='/projects/:id' component={Project}/>
         </Switch>
       </Router>
+      </div>
     );
 }
 

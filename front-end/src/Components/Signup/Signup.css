@@ -1,5 +1,6 @@
 .body {
-    background-color: grey;
+    background-color: #939196;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +12,6 @@
 .box {
     height: 60%;
     width: 30%;
-    background-color: aliceblue;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -38,11 +38,16 @@ class Login extends React.Component {
       .then(()=>this.props.history.push('/')).catch(err => alert(err));
   };
 
+  handleEnter = (e) => {
+    if (e.which === 13) {
+        this.handleSubmit();
+    }
+}
+
   render() {
     let { username, password } = this.state;
     return (
       <main className="body">
-        <header className="header" />
         <section className="box">
           <section className="box-message">Login Plz</section>
           <section className="input-container">
@@ -52,21 +57,28 @@ class Login extends React.Component {
               placeholder="username"
               value={username}
               onChange={this.handleChange}
+              onKeyPress={this.handleEnter}
             />
             <input
               name="password"
+              type='password'
               className="box-input"
               placeholder="password"
               value={password}
               onChange={this.handleChange}
+              onKeyPress={this.handleEnter}
             />
-            <section className = 'link-wrapper'>
-                <Link className= 'link' to = '/signup'>Signup</Link>
-                </section>
-          </section>
+             <section className = 'link-wrapper'>
           <button className="submit-button" onClick={this.handleSubmit}>
             Submit
           </button>
+          </section>
+            <section className = 'link-wrapper'>
+                <Link className= 'link' to = '/signup'>
+                  <button className ='submit-button'>Signup</button>
+                  </Link>
+                </section>
+          </section>
         </section>
       </main>
     );

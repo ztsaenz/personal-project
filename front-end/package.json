@@ -6,9 +6,12 @@
     "axios": "^0.19.0",
     "browser-router": "^0.2.0",
     "react": "^16.8.6",
+    "react-chat-window": "^1.2.1",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "reactjs-popup": "^1.4.2",
+    "socket.io-client": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

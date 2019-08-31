@@ -3,6 +3,19 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import Logout from "../Logout/Logout";
+import io from "socket.io-client";
+
+// const messages = []
+const socket = io("http://localhost:8080");
+
+socket.on('news', function (data){
+  console.log(data)
+})
+
+socket.on('chat', function (data){
+  console.log(data)
+})
+
 
 export default class Home extends React.Component {
   state = {
@@ -55,22 +68,48 @@ export default class Home extends React.Component {
     const body = { title: inputValue, user_id: this.state.user.id };
     if (body.title === null) {
       return alert("please enter a project");
-    } else {
+    } 
+    else if (!body.title){
+      return alert('do something plz')
+   }
+    else {
       this.createProject(body);
     }
   };
 
-  deleteProject = param => {    
-
-    return axios
-      .delete(`/api/projects/delete/${param}`)
-      .then(() =>
-        axios.get(`/api/projects/list/${this.state.user.id}`).then(res => {
-          this.setState({ projects: res.data });
-        })
-      )
-      .catch(console.error);
+  deleteProject = (projectId, creatorId) => {
+    if (this.state.user.id === Number(creatorId)) {
+      axios
+        .delete(`/api/projects/delete/${projectId}`)
+        .then(() =>
+          axios.get(`/api/projects/list/${this.state.user.id}`).then(res => {
+            this.setState({ projects: res.data });
+          })
+        )
+        .catch(console.error);
+    } else {
+      alert("not creator cannot delete project");
+    }
   };
+
+  updateProject = async (projectId, body)=>{
+    axios
+    .put(`/api/projects/edit/${projectId}`, body)
+    .then((res)=>this.setState({projects: res.data}))
+    .catch(console.error)
+  }
+
+  promptUpdateProject = async (projectId, userId)=>{
+   const inputValue = window.prompt('edit project title')
+   const body = {title: inputValue, user_id: userId}
+   if(body.title === null){
+     return alert('do something plz')
+   } else if (!body.title){
+      return alert('do something plz')
+   }else {
+     this.updateProject(projectId, body)
+   }
+  }
 
   render() {
     return (
@@ -79,17 +118,17 @@ export default class Home extends React.Component {
           <section className="welcome">
             Welcome {this.state.user.full_name}
           </section>
-          <button onClick={this.promptNewProject}>New Project</button>
-          <section className="logout-button">
+          <button className='homepage-button' onClick={this.promptNewProject}>New Project</button>
+          <section className="logout">
             <Logout handleLogout={this.handleLogout} />
           </section>
         </header>
-        <section className="project-list">
           <ProjectList
             projects={this.state.projects}
             deleteProject={this.deleteProject}
+            userId={this.state.user.id}
+            promptUpdateProject={this.promptUpdateProject}
           />
-        </section>
       </main>
     );
   }
@@ -100,16 +139,72 @@ class ProjectList extends React.Component {
     const projectList = this.props.projects.map((project, i) => {
       return (
         <div className="project-container" key={i}>
-          <Link to={`/projects/${project.project_id}`}>
-            <header>{project.title}</header>
-          </Link>
-          <section className="project-desc">{project.project_id}</section>
-          <button onClick={() => this.props.deleteProject(project.project_id)}>
+          <Link className='project-link' to={`/projects/${project.project_id}`}>
+            <section className='project-card-title'>{project.title}
+            </section>
+          </Link> 
+            <button className="homepage-button" onClick={()=>this.props.promptUpdateProject(project.project_id, this.props.userId)}>
+              edit
+              </button>
+          <section className='delete-button-container'>
+             <button
+          className='homepage-button'
+            onClick={() =>
+              this.props.deleteProject(project.project_id, project.creator)
+            }
+          >
             Delete
           </button>
+          </section>
+         
         </div>
       );
     });
-    return <div>{projectList}</div>;
+    return (
+        <div className='project-list'>{projectList}</div>
+
+    );
   }
 }
+
+// class Chat extends React.Component {
+//   state = {
+//     newMessage: "",
+//     messages: []
+//   };
+
+//   handleChange = (e) => {
+
+//     this.setState({
+//       [e.target.name]: e.target.value
+//     })
+//   }
+
+//   handleSubmit = () => {
+//     console.log(this.state.newMessage)
+    
+//     const body = {message: this.state.newMessage}
+//     socket.to('some room').emit('chat', body)
+//     // axios
+//     // .post('/api/chat/send', body)
+//     // .catch(console.error)
+//   }
+//   render() {
+//     const displayMessages = messages.map((message, i) => {
+//      return <div key={i}>
+//         <div>{message.body}</div>
+//         <div>{message.sender}</div>
+//       </div>;
+//     });
+//     return (
+//       <div>
+//         <section className='chat'>{displayMessages}</section>
+//         <form onSubmit={this.handleSubmit}>
+//             <input type='text' name='newMessage' value={this.state.newMessage} onChange={this.handleChange} placeholder='new message'/>
+//             <input type='submit'/>
+
+//         </form>
+//       </div>
+//     );
+//   }
+// }

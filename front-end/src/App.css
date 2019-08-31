@@ -1,3 +1,7 @@
 .app {
-    background-color: black;
+    background-color: #939196;
+    font-family: 'Raleway', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    color: white;
 }
