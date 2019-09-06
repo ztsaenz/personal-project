@@ -12,13 +12,18 @@ const goalsController = require("./Controller/goalsController");
 const tasksController = require("./Controller/tasksController");
 const notesController = require("./Controller/notesController");
 const io = require("socket.io")(http);
+require('dotenv').config()
 
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
-massive("postgres://postgres:postgres@localhost:5432/postgres").then(db => {
+
+massive(process.env.DATABASE_URL).then(db => {
   console.log("connected to the db");
   app.set("db", db);
-});
+}).catch(error => console.error(error));
+
+app.use(express.static(path.join(__dirname, 'build')))
+
 app.use(
   session({
     secret: "keyboard cat",
@@ -110,6 +115,10 @@ app.get("/api/user", loginController.getUser);
 
 app.get("/api/users", loginController.getUsers);
 
-http.listen(8080, () => {
-  console.log(`listening on port:8080`);
+app.get('*', (req,res)=> {
+  res.sendFile(path.join(_dirname, 'build', 'index.html'))
+})
+
+http.listen(process.env.PORT || 8080, () => {
+  console.log(`SEND IT!`);
 });
